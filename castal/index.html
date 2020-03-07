@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Castal</title>
+        <style>
+            html,
+            body {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #000;
+            }
+            canvas {
+                background-color: #fff;
+                border: 3px solid #000;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="myCanvas"></canvas>
+        <script>
+            /** @type {HTMLCanvasElement} */
+            const canvas = document.getElementById("myCanvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = 400;
+            canvas.height = 400;
+
+            function drawGrid() {
+                for (let i = 0; i < 10; i++) {
+                    const position = i * 50;
+                    // vertical grid
+                    ctx.fillText(position, position, 10);
+                    ctx.moveTo(position, 0);
+                    ctx.lineTo(position, 400);
+
+                    // horizontal grid
+                    ctx.fillText(position, 0, position);
+                    ctx.moveTo(0, position);
+                    ctx.lineTo(400, position);
+                }
+                ctx.strokeStyle = "rgba(0,0,0, .1)";
+                ctx.stroke();
+            }
+
+            let time = 0;
+            const mouse = { x: 0, y: 0 };
+
+            canvas.addEventListener("mousemove", e => {
+                mouse.x = e.offsetX;
+                mouse.y = e.offsetY;
+            });
+
+            function draw() {
+                time = time < 440 ? time + 1 : 0;
+                // time++;
+                ctx.clearRect(0, 0, 400, 400);
+                drawGrid();
+                // mouse
+                ctx.beginPath();
+                ctx.arc(mouse.x, mouse.y, 5, 0, Math.PI * 2);
+                ctx.fill();
+                // floor
+                ctx.beginPath();
+                ctx.moveTo(25, 350);
+                ctx.lineTo(375, 350);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "rgba(0,0,0)";
+                ctx.stroke();
+
+                // castal body
+                ctx.beginPath();
+                ctx.rect(300, 300, 50, 50);
+                ctx.strokeRect(300, 300, 50, 50);
+                ctx.fillStyle = "#ed5a2a";
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.rect(50, 300, 50, 50);
+                ctx.rect(250, 250, 50, 100);
+                ctx.strokeRect(50, 300, 50, 50);
+                ctx.strokeRect(250, 250, 50, 100);
+                ctx.fillStyle = "#ffc12c";
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.rect(100, 250, 50, 100);
+                ctx.rect(200, 250, 50, 100);
+                ctx.strokeRect(100, 250, 50, 100);
+                ctx.strokeRect(200, 250, 50, 100);
+                ctx.fillStyle = "#ff9f51";
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(100, 200);
+                ctx.lineTo(250, 200);
+                ctx.lineTo(250, 250);
+                ctx.lineTo(200, 250);
+                ctx.arc(175, 250, 25, Math.PI * 2, Math.PI, true);
+                ctx.lineTo(100, 250);
+                ctx.closePath();
+                ctx.fillStyle = "#fff";
+                ctx.fill();
+                ctx.stroke();
+                // roof
+                ctx.beginPath();
+                ctx.moveTo(100, 200);
+                ctx.lineTo(175, 150);
+                ctx.lineTo(250, 200);
+                ctx.closePath();
+                ctx.fillStyle = "#ed5a2a";
+                ctx.fill();
+                ctx.stroke();
+                // flag
+                ctx.beginPath();
+                ctx.moveTo(175, 150);
+                ctx.lineTo(175, 100 - mouse.y / 5);
+                ctx.lineTo(200, 110 + (time % 5) - mouse.y / 5);
+                ctx.lineTo(175, 120 - mouse.y / 5);
+                ctx.fillStyle = `hsl(${mouse.x % 360}, 50%, 50%)`;
+                ctx.fill();
+                ctx.stroke();
+                // car
+                const carX = (time % 440) - 40;
+                ctx.beginPath();
+                ctx.rect(carX, 325, 40, 25);
+                ctx.strokeRect(carX, 325, 40, 25);
+                ctx.fillStyle = "#fff";
+                ctx.fill();
+                ctx.stroke();
+                // wheel
+                ctx.beginPath();
+                ctx.arc(carX + 10, 350, 5, 0, Math.PI * 2);
+                ctx.arc(carX + 30, 350, 5, 0, Math.PI * 2);
+                ctx.fillStyle = "#000";
+                ctx.fill();
+                ctx.stroke();
+            }
+            setInterval(draw, 30);
+        </script>
+    </body>
+</html>
